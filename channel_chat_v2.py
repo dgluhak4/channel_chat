@@ -147,18 +147,17 @@ class Channel:
         - list of threads
         - communication socket
         """
-        global channel_threads, sck
 
 # initialize chat-server
-        channel_threads = []
-        sck = socket.socket()
+        self.channel_threads = []
+        self.channel_sck = socket.socket()
         try:
             SERVER = (socket.gethostbyname(HOST), PORT)
         except OSError:
             SERVER = (LOCALHOST, PORT)
         print(SERVER)
-        sck.bind(SERVER)
-        sck.listen(5)
+        self.channel_sck.bind(SERVER)
+        self.channel_sck.listen(5)
 
     def EndOfWork(self):
         """Function that clears the Channel class object
@@ -173,8 +172,8 @@ class Channel:
         for channel in self.channel_threads:
             channel.join(1)
             logging.shutdown()
-            sck.shutdown()
-            sck.close()
+            self.channel_sck.shutdown()
+            self.channel_sck.close()
         return True
 
     def CoreLoop(self):
@@ -186,13 +185,13 @@ class Channel:
         peers_message = ''
 # petlja za cekanje i aktiviranje klijenata
         while True:
-            (client_handle, client_IP) = sck.accept()
+            (client_handle, client_IP) = self.channel_sck.accept()
             client_ID = client_ID+1
             cl = Client(client_handle, client_IP, client_ID, "User#"+str(client_ID))
             client_list.append(cl)
 # pokretanje novog threada
             channel = threading.Thread(name='User#'+str(client_IP), target=client_channel, args=(cl, client_list,))
-            channel_threads.append(channel)
+            self.channel_threads.append(channel)
             channel.start()
 # welcoming notes
             client_handle.send(bytes(WELCOME+'User#'+str(client_ID)+'\r\nType '+EXIT_CODE+' to end\r\nType '+NAME_CODE+' <chosen name> to identify yourself\r\n', 'utf-8'))
