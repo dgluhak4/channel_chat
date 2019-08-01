@@ -87,7 +87,7 @@ class Client:
         return self.ID
 
     def GetError(self):
-        return socket.error
+        return self.client_handle.error
 #    return self.client_handle.error
 
     def GetIfEmptyMessage(self):
@@ -170,7 +170,7 @@ class Channel:
         Returns:
         - always True
         """
-        for channel in channel_threads:
+        for channel in self.channel_threads:
             channel.join(1)
             logging.shutdown()
             sck.shutdown()
