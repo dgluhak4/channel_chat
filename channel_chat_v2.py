@@ -192,7 +192,7 @@ class Channel:
             client_list.append(cl)
 # pokretanje novog threada
             channel = threading.Thread(name='User#'+str(client_IP), target=client_channel, args=(cl, client_list,))
-            channel_threads.append(channel)
+            self.channel_threads.append(channel)
             channel.start()
 # welcoming notes
             client_handle.send(bytes(WELCOME+'User#'+str(client_ID)+'\r\nType '+EXIT_CODE+' to end\r\nType '+NAME_CODE+' <chosen name> to identify yourself\r\n', 'utf-8'))
