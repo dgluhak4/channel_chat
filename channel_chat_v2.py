@@ -139,7 +139,14 @@ class Client:
 
 
 class Channel:
+    """Class that defines behaviour of the communication channel"""
     def __init__(self):
+        """Constructor of the Channel class object
+
+        Consists of:
+        - list of threads
+        - communication socket
+        """
         global channel_threads, sck
 
 # initialize chat-server
@@ -154,6 +161,15 @@ class Channel:
         sck.listen(5)
 
     def EndOfWork(self):
+        """Function that clears the Channel class object
+
+        Consists of:
+        - logging removal
+        - socket deletion and closure
+
+        Returns:
+        - always True
+        """
         for channel in channel_threads:
             channel.join(1)
             logging.shutdown()
@@ -162,6 +178,9 @@ class Channel:
         return True
 
     def CoreLoop(self):
+        """Function that represents engine of the channel.
+        Responsible for accepting new clients and maintaining the list of successfully joined clients.
+        """
         client_list = []
         client_ID = 0
         peers_message = ''
@@ -176,8 +195,7 @@ class Channel:
             channel_threads.append(channel)
             channel.start()
 # welcoming notes
-            client_handle.send(bytes(WELCOME+'User#'+str(client_ID)+'\r\nType '+EXIT_CODE+' to end\r\nType '+NAME_CODE+' <chosen name> to \
-                               identify yourself\r\n', 'utf-8'))
+            client_handle.send(bytes(WELCOME+'User#'+str(client_ID)+'\r\nType '+EXIT_CODE+' to end\r\nType '+NAME_CODE+' <chosen name> to identify yourself\r\n', 'utf-8'))
             peers_message = ''
             for peers in client_list:
                 peers_message += str(peers.GetName())+' '
@@ -185,6 +203,10 @@ class Channel:
         return True
 
 
-ch = Channel()
-ch.CoreLoop()
-ch.EndOfWork()
+if __name__ == '__main__':
+    """Main function of the messaging program.
+    Initializes a Channel class object, runs the engine of the channel and finally closes the channel.
+    """
+    ch = Channel()
+    ch.CoreLoop()
+    ch.EndOfWork()
