@@ -147,18 +147,17 @@ class Channel:
         - list of threads
         - communication socket
         """
-        global channel_threads, sck
 
 # initialize chat-server
-        channel_threads = []
-        sck = socket.socket()
+        self.channel_threads = []
+        self.channel_sck = socket.socket()
         try:
             SERVER = (socket.gethostbyname(HOST), PORT)
         except OSError:
             SERVER = (LOCALHOST, PORT)
         print(SERVER)
-        sck.bind(SERVER)
-        sck.listen(5)
+        self.channel_sck.bind(SERVER)
+        self.channel_sck.listen(5)
 
     def EndOfWork(self):
         """Function that clears the Channel class object
@@ -173,8 +172,8 @@ class Channel:
         for channel in self.channel_threads:
             channel.join(1)
             logging.shutdown()
-            sck.shutdown()
-            sck.close()
+            self.channel_sck.shutdown()
+            self.channel_sck.close()
         return True
 
     def CoreLoop(self):
