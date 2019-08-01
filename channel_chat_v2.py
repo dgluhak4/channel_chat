@@ -185,7 +185,7 @@ class Channel:
         peers_message = ''
 # petlja za cekanje i aktiviranje klijenata
         while True:
-            (client_handle, client_IP) = sck.accept()
+            (client_handle, client_IP) = self.channel_sck.accept()
             client_ID = client_ID+1
             cl = Client(client_handle, client_IP, client_ID, "User#"+str(client_ID))
             client_list.append(cl)
